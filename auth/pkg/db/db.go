@@ -16,7 +16,7 @@ func CreateConnectionURL(host, username, password, database string, port int) st
 
 // Connect to Postgres database
 func Connect(host, username, password, database string, port int) (*sql.DB, error) {
-	db, err := sql.Open("postgres", CreateConnectionURL(host, username, password, database, 5432))
+	db, err := sql.Open("postgres", CreateConnectionURL(host, username, password, database, port))
 	if err != nil {
 		return nil, err
 	}

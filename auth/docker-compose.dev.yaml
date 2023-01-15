@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  # Postgres container
+  postgres:
+    image: harbor.adamkoro.com/dockerproxy/library/postgres:14.6-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_USER: test
+      POSTGRES_DB: users
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - auth_dev
+  # Build container from Dockerfile, set dockerfile to Dockerfile.dev
+  producer:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: /go/bin/reflex -r "\.go$$" -s -- sh -c "go run ./"
+    image: harbor.adamkoro.com/demo-k8s/auth:dev
+    volumes:
+      - ./:/go/src/app
+    ports:
+      - "8080:8080"
+    networks:
+      - producer_dev
+# New dev network
+networks:
+  auth_dev:

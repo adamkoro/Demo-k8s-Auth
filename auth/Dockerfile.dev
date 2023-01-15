@@ -1,0 +1,5 @@
+# Create hot-reloadable Golang image
+FROM harbor.adamkoro.com/bci/golang:1.19
+WORKDIR /go/src/app
+COPY . .
+RUN go install github.com/cespare/reflex@latest && go mod download

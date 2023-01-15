@@ -25,7 +25,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - producer_dev
+      - auth_dev
 # New dev network
 networks:
   auth_dev:

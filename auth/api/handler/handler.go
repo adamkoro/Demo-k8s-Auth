@@ -26,6 +26,9 @@ func Router() *gin.Engine {
 	{
 		api.GET("/ping", v1.Ping)
 		api.GET("/health", v1.Health)
+		api.POST("/register", v1.Register)
+		api.POST("/login", v1.Login)
+
 	}
 	return router
 }

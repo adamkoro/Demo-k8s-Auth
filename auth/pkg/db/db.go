@@ -40,3 +40,8 @@ func Ping(db *sql.DB) error {
 	}
 	return nil
 }
+
+// QueryRow executes a query that is expected to return at most one row.
+func QueryRow(db *sql.DB, query string, args ...interface{}) *sql.Row {
+	return db.QueryRow(query, args...)
+}

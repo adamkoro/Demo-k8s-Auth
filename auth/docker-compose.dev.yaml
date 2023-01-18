@@ -2,7 +2,7 @@ version: "3.7"
 services:
   # Postgres container
   postgres:
-    image: harbor.adamkoro.com/dockerproxy/library/postgres:14.6-alpine
+    image: harbor.adamkoro.com/dockerproxy/library/postgres:15.1-alpine
     ports:
       - "5432:5432"
     environment:
@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: test
       POSTGRES_DB: users
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - auth_dev
   # Build container from Dockerfile, set dockerfile to Dockerfile.dev

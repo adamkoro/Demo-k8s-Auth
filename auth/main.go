@@ -15,7 +15,6 @@ import (
 )
 
 func main() {
-	log.Println("Hello, world!")
 	var err error
 	vars.DBConn, err = db.Connect("192.168.1.100", "test", "test", "users", 5432)
 	if err != nil {

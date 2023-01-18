@@ -15,7 +15,7 @@ func GetAllUsers(db *sql.DB) ([]model.User, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var user model.User
-		err := rows.Scan(&user.ID, &user.Username, &user.Password, &user.Email)
+		err := rows.Scan(&user.ID, &user.Username, &user.Password, &user.Email, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt, &user.LastName, &user.FirstName)
 		if err != nil {
 			return nil, err
 		}
@@ -35,14 +35,36 @@ func GetUserById(db *sql.DB, id int) (model.User, error) {
 	return user, nil
 }
 
-// Create a new user
-func CreateUser(db *sql.DB, user model.User) (model.User, error) {
-	err := db.QueryRow("INSERT INTO users (username, password, email) VALUES ($1, $2, $3) RETURNING id",
-		user.Username, user.Password, user.Email).Scan(&user.ID)
+// Get user by username
+func GetUserByUsername(db *sql.DB, username string) (model.User, error) {
+	var user model.User
+	row := db.QueryRow("SELECT * FROM users WHERE username = $1", username)
+	err := row.Scan(&user.ID, &user.Username, &user.LastName, &user.FirstName, &user.Email, &user.Phone, &user.Password, &user.Salt, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt)
 	if err != nil {
 		return user, err
 	}
 	return user, nil
+}
+
+// Get user by email
+func GetUserByEmail(db *sql.DB, email string) (model.User, error) {
+	var user model.User
+	row := db.QueryRow("SELECT * FROM users WHERE email = $1", email)
+	err := row.Scan(&user.ID, &user.Username, &user.Password, &user.Email)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+// Create a new user
+func CreateUser(db *sql.DB, user *model.User) (model.User, error) {
+	err := db.QueryRow("INSERT INTO users (id, username, password, email, phone, lastName, firstName, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
+		user.ID, user.Username, user.Password, user.Email, user.Phone, user.LastName, user.FirstName, user.CreatedAt).Scan(&user.ID)
+	if err != nil {
+		return *user, err
+	}
+	return *user, nil
 }
 
 // Update user by id
